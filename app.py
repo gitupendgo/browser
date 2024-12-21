@@ -1,26 +1,36 @@
+import streamlit as st
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
-import streamlit as st
 
 # Initialize Selenium WebDriver
 def init_driver():
-    # Chrome options for headless mode
     chrome_options = Options()
-    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--headless")  # Run in headless mode
     chrome_options.add_argument("--disable-gpu")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
-
-    # Path to chromedriver (ensure it's in the same directory as app.py)
-    service = Service("./chromedriver")
+    
+    # Path to ChromeDriver
+    service = Service("./chromedriver")  # Ensure this matches the file name in your repo
     driver = webdriver.Chrome(service=service, options=chrome_options)
     return driver
 
 # Streamlit App
-st.title("Selenium in Streamlit")
+st.title("Selenium in Streamlit: Simple Test")
+
 if st.button("Run Browser Test"):
-    driver = init_driver()
-    driver.get("https://www.google.com")
-    st.write(f"Page title: {driver.title}")
-    driver.quit()
+    try:
+        # Initialize the WebDriver
+        driver = init_driver()
+        st.write("Driver initialized successfully.")
+
+        # Perform a simple test: Open Google and fetch the page title
+        driver.get("https://www.google.com")
+        page_title = driver.title
+        st.success(f"Page title: {page_title}")
+
+        # Close the WebDriver
+        driver.quit()
+    except Exception as e:
+        st.error(f"An error occurred: {e}")
